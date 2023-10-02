@@ -1,0 +1,83 @@
+########## Importer les modules necessaires ##############
+from tkinter import *
+from tkinter.font import Font
+from tkinter import filedialog
+from PIL import Image,ImageTk
+##########################################################
+##########    Fonctions ##################################
+##########################################################    
+def interface():
+    """
+    Création de l'interface
+    """
+    global Canvas, openButton, borderWidth, borderHeight
+    # Calcul des coordonnées x pour centrer le bouton horizontalement
+    xButton = (window.winfo_width() - openButton.winfo_reqwidth()) // 2
+    # Calcul des coordonnées y pour positionner le bouton à 3/4 de la fenêtre
+    yButton = (window.winfo_height() * 3 // 4) - (openButton.winfo_reqheight() // 2)
+    openButton.place(x=xButton, y=yButton)  # Placement du bouton en bas au milieu
+    
+    # Calcul des coordonnées x pour centrer la bordure horizontalement
+    xBorder = (window.winfo_width() - borderWidth[0]) // 2
+    # Calcul des coordonnées y pour positionner la bordure au centre de la fenêtre
+    yBorder = (window.winfo_height() - borderWidth[0]) // 2
+    border = Canvas.create_rectangle(100,200,300,500)
+    
+    
+    
+    #Canevas.create_rectangle(100,200,300,500)
+    
+    
+def importImg(canvas):
+    """
+    Importation de l'image en cliquant sur le bouton
+    """
+    directory = filedialog.askopenfilename(initialdir="/",
+                                          title="Importer une image",
+                                          filetypes=(("PNG", "*.png"),
+                                                     ("JPEG", "*.jpg")))
+    if directory:
+        openImage = Image.open(directory)
+        img = ImageTk.PhotoImage(openImage)
+        img_on_canvas = canvas.create_image(0, 0, anchor=NW, image=img)
+        canvas.img = img  # Garder une référence à l'image pour éviter qu'elle ne soit supprimée par le garbage collector
+##########################################################
+##########    Variables ##################################
+##########################################################
+
+#########################################################
+########## Interface graphique ##########################
+##########################################################
+window = Tk()
+window.title("Titre")
+Canvas = Canvas(window,width=1000,height=1000,bg ='white')
+Canvas.pack()
+buttonFont = Font(family='Arial', size=12) # création d'une police pour l'affichage du texte
+# Empêcher la redimension horizontale (largeur)
+window.resizable(False, False)  # False pour la largeur, True pour la hauteur
+
+# Création du bouton pour importer l'image
+openButton = Button(
+    window,
+    text="Importer une image",
+    font=buttonFont,
+    height = 1,
+    width = 16,
+    command=lambda: importImg(Canvas))  # Utilisation de lambda pour retarder l'appel à importImg
+
+borderWidth = 480
+borderHeight = 480
+###########################################################
+########### Receptionnaire d'évènement ####################
+###########################################################
+ 
+##########################################################
+############# Programme principal ########################
+##########################################################
+# Mettre à jour la fenêtre pour obtenir ses dimensions correctes
+window.update()
+
+# Appeler la fonction interface pour placer le bouton correctement
+interface()
+###################### FIN ###############################  
+window.mainloop()
