@@ -1,0 +1,22 @@
+from PIL import Image
+
+img = Image.open("spyder.jpg")
+
+
+def resize_img(img):
+    imgCropped = img.crop(box=(0, 0, img.height, img.height))
+    imgResized = imgCropped.resize((48, 48))
+    return imgResized
+
+imgResized = resize_img(img)
+
+def recup_couleur(img):
+    couleur_pixel=[]
+    for y in range(0,48):
+        for x in range(0,48):
+            coordonnee = x, y
+            pixel = img.getpixel(coordonnee)
+            couleur_pixel.append([coordonnee, pixel])
+    return couleur_pixel
+
+print(recup_couleur(imgResized))
