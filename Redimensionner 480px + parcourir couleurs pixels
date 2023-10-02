@@ -12,3 +12,14 @@ canvas = Tk.Canvas(root, width = 480, height = 480)
 canvas.create_image(1,1, anchor = Tk.NW, image=img)
 canvas.pack() 
 root.mainloop()
+
+
+largeur_image=480
+hauteur_image=480
+compteur=0
+for y in range (hauteur_image):
+    for x in range (largeur_image):
+        compteur+=1
+        r,v,b=image.getpixel((x,y) )
+        print("rouge : ", r, "vert :", v,"bleu : ", b)
+        print(compteur)
