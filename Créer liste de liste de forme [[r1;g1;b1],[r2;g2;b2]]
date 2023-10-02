@@ -1,0 +1,31 @@
+mots = open("color trier.txt").read().splitlines()
+caractere = list(mots)
+mots = ""
+for j in range(len(caractere)):
+   if caractere[j] != "'" or caractere[j] != " " :
+       mots += caractere[j]
+print(mots)
+r_g_b = []
+liste = []
+couleur = ''
+for a in range(len(mots)):
+    #print(mots[a])
+    if mots[a] == '[' or mots[a] == ']' or mots[a] == "'" or a<3:
+        couleur = couleur
+    elif mots[a] == ';' :
+        r_g_b.append(couleur)
+        #print(r_g_b)
+        couleur = "" 
+    elif mots[a] == ',':
+        r_g_b.append(couleur)
+        liste.append(r_g_b)
+        #print(r_g_b)
+        r_g_b = []
+        couleur = ""
+    else:
+        couleur += mots[a]
+        #if len(liste) < 5:
+            #print(couleur)
+r_g_b.append(couleur)
+liste.append(r_g_b)
+print(liste)
