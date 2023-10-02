@@ -1,0 +1,41 @@
+from PIL import Image, ImageTk 
+import  tkinter as Tk 
+root = Tk.Tk() 
+root.geometry("480x480")
+
+image = Image.open("truc.jpg")
+resized_image= image.resize((480,480), Image.ANTIALIAS) 
+img= ImageTk.PhotoImage(resized_image)
+ 
+ 
+canvas = Tk.Canvas(root, width = 480, height = 480) 
+canvas.create_image(1,1, anchor = Tk.NW, image=img)
+canvas.pack() 
+root.mainloop()
+
+
+L=[]
+l=[]
+a=[]
+red=0
+green=0
+blue=0
+for i in range(48):
+    for w in range(48):
+        for y in range(i*10,(i+1)*10):
+            for x in range (w*10,(w+1)*10):
+                r,g,b=image.getpixel((x,y))
+                red+=r
+                green+=g
+                blue+=b
+        a.append(round(red/100))
+        a.append(round(green/100))
+        a.append(round(blue/100))
+        l.append(a)
+        red=0
+        green=0
+        blue=0
+        a=[]
+    L.append(l)
+    l=[]
+print(L)
