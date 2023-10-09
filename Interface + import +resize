@@ -11,6 +11,7 @@ def interface():
     Création de l'interface
     """
     global Canvas, openButton, borderWidth, borderHeight
+    
     # Calcul des coordonnées x pour centrer le bouton horizontalement
     xButton = (window.winfo_width() - openButton.winfo_reqwidth()) // 2
     # Calcul des coordonnées y pour positionner le bouton à 3/4 de la fenêtre
@@ -18,15 +19,11 @@ def interface():
     openButton.place(x=xButton, y=yButton)  # Placement du bouton en bas au milieu
     
     # Calcul des coordonnées x pour centrer la bordure horizontalement
-    xBorder = (window.winfo_width() - borderWidth[0]) // 2
+    xBorder = (window.winfo_width()) // 2
     # Calcul des coordonnées y pour positionner la bordure au centre de la fenêtre
-    yBorder = (window.winfo_height() - borderWidth[0]) // 2
-    border = Canvas.create_rectangle(100,200,300,500)
-    
-    
-    
-    #Canevas.create_rectangle(100,200,300,500)
-    
+    yBorder = (window.winfo_height() - borderWidth) // 1.5
+    border = Canvas.create_rectangle(xBorder-borderWidth/2, yBorder-borderHeight/2, xBorder+borderWidth/2, yBorder+borderHeight/2)
+        
     
 def importImg(canvas):
     """
@@ -38,9 +35,30 @@ def importImg(canvas):
                                                      ("JPEG", "*.jpg")))
     if directory:
         openImage = Image.open(directory)
-        img = ImageTk.PhotoImage(openImage)
-        img_on_canvas = canvas.create_image(0, 0, anchor=NW, image=img)
-        canvas.img = img  # Garder une référence à l'image pour éviter qu'elle ne soit supprimée par le garbage collector
+        
+        maximum = max(openImage.width, openImage.height)
+        if openImage.width == maximum:
+            test = openImage
+            imgResized = test.resize((int(openImage.width*480/openImage.height), 480))
+        else:
+            test = openImage
+            imgResized = test.resize((480, int(openImage.height*480/openImage.width)))
+        center_x = imgResized.width // 2
+        center_y = imgResized.height // 2
+        print(center_x, center_y)
+        box_size = 480
+        left = max(center_x - box_size // 2, 0)
+        top = max(center_y - box_size // 2, 0)
+        right = min(center_x + box_size // 2, imgResized.width)
+        bottom = min(center_y + box_size // 2, imgResized.height)
+        imgCropped = imgResized.crop((left, top, right, bottom))
+            
+        img = ImageTk.PhotoImage(imgCropped)
+        
+        
+        
+        img_on_canvas = canvas.create_image(263, 111, anchor=NW, image=img)
+        canvas.img = img
 ##########################################################
 ##########    Variables ##################################
 ##########################################################
@@ -53,7 +71,6 @@ window.title("Titre")
 Canvas = Canvas(window,width=1000,height=1000,bg ='white')
 Canvas.pack()
 buttonFont = Font(family='Arial', size=12) # création d'une police pour l'affichage du texte
-# Empêcher la redimension horizontale (largeur)
 window.resizable(False, False)  # False pour la largeur, True pour la hauteur
 
 # Création du bouton pour importer l'image
@@ -65,8 +82,8 @@ openButton = Button(
     width = 16,
     command=lambda: importImg(Canvas))  # Utilisation de lambda pour retarder l'appel à importImg
 
-borderWidth = 480
-borderHeight = 480
+borderWidth = 479
+borderHeight = 479
 ###########################################################
 ########### Receptionnaire d'évènement ####################
 ###########################################################
